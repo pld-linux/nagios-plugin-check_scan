@@ -42,7 +42,7 @@ cp -p %{SOURCE0} %{plugin}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{plugindir},%{statedir}}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{plugindir},%{statedir}/{files,scans}}
 install -p %{plugin} $RPM_BUILD_ROOT%{plugindir}/%{plugin}
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{plugin}.cfg
 
@@ -53,4 +53,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(640,root,nagios) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{plugin}.cfg
 %attr(755,root,root) %{plugindir}/%{plugin}
-%dir %attr(770,root,nagios) %{statedir}
+%dir %attr(750,root,nagios) %{statedir}
+%dir %attr(770,root,nagios) %{statedir}/files
+%dir %attr(770,root,nagios) %{statedir}/scans
