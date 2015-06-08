@@ -7,17 +7,19 @@ License:	GPL v2+
 Group:		Networking
 Source0:	http://www.altsec.info/check_scan.sh
 # Source0-md5:	8e79becb95012c2aedf0b9c68373f928
+Patch0:		pld.patch
 URL:		http://www.altsec.info/check_scan.html
-Requires:	nagios-common
-Requires:	grep
-Requires:	nmap
 Requires:	coreutils
+Requires:	grep
+Requires:	nagios-common
+Requires:	nmap
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/nagios/plugins
 %define		nrpeddir	/etc/nagios/nrpe.d
 %define		plugindir	%{_prefix}/lib/nagios/plugins
+%define		statedir	/var/lib/nagios/check_scan
 
 %description
 A nmap scanner plugin for Nagios
@@ -35,10 +37,11 @@ root.
 %prep
 %setup -qcT
 cp -p %{SOURCE0} %{plugin}
+%patch0 -p1
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{plugindir}}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{plugindir},%{statedir}}
 install -p %{plugin} $RPM_BUILD_ROOT%{plugindir}/%{plugin}
 
 %clean
@@ -47,3 +50,4 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) %{plugindir}/%{plugin}
+%dir %attr(770,root,nagios) %{statedir}
