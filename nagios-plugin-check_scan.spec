@@ -7,6 +7,7 @@ License:	GPL v2+
 Group:		Networking
 Source0:	http://www.altsec.info/check_scan.sh
 # Source0-md5:	8e79becb95012c2aedf0b9c68373f928
+Source1:	%{plugin}.cfg
 Patch0:		pld.patch
 URL:		http://www.altsec.info/check_scan.html
 Requires:	coreutils
@@ -43,11 +44,13 @@ cp -p %{SOURCE0} %{plugin}
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{plugindir},%{statedir}}
 install -p %{plugin} $RPM_BUILD_ROOT%{plugindir}/%{plugin}
+cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{plugin}.cfg
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
+%attr(640,root,nagios) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{plugin}.cfg
 %attr(755,root,root) %{plugindir}/%{plugin}
 %dir %attr(770,root,nagios) %{statedir}
