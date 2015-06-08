@@ -1,6 +1,6 @@
---- nagios-plugin-check_scan/check_scan~	2015-06-08 15:10:59.829649097 +0300
-+++ nagios-plugin-check_scan/check_scan	2015-06-08 15:11:24.537599653 +0300
-@@ -60,11 +60,20 @@
+--- nagios-plugin-check_scan/check_scan	2015-06-08 15:11:24.537599653 +0300
++++ nagios-plugin-check_scan-20051011/check_scan	2015-06-08 15:20:57.107351465 +0300
+@@ -60,11 +60,18 @@
  # 3.  incorporate critical port lists
  #
  # - - - - - - - - SET THESE VARIABLES - - - - - - - - - - - - 
@@ -10,8 +10,6 @@
 +# where to keep everything
 +# must be nagios user writable
 +BASEDIR=/var/lib/nagios/check_scan
-+# where is nmap
-+NMAPPATH=/usr/bin
  #------------------------------------------------------------
  
 +# constants from utils.sh
@@ -24,7 +22,7 @@
  #note... to run manually, you have to supply a dummy
  #argument 1, since the ip address is arg2
  
-@@ -73,7 +82,7 @@
+@@ -73,7 +80,7 @@
  if [ ! "$IP" ]; then
  
     echo "No IP address supplied"
@@ -33,9 +31,35 @@
  
  fi
  
-@@ -130,19 +139,19 @@
+@@ -111,38 +118,38 @@
  
-    /bin/cat $SCANDIR/$IP > $SCANDIR/$IP.base
+ fi
+ 
+-SCANTIME=`/bin/date +%Y%m%d-%H%M`
++SCANTIME=`date +%Y%m%d-%H%M`
+ 
+-/usr/bin/nmap -sT -P0 $IP | /bin/grep -w open | \
+-/usr/bin/sort > $SCANDIR/$IP
++nmap -sT -P0 $IP | grep -w open | \
++sort > $SCANDIR/$IP
+ 
+-DIFF=`/usr/bin/comm -23 $SCANDIR/$IP $SCANDIR/$IP.base`
++DIFF=`comm -23 $SCANDIR/$IP $SCANDIR/$IP.base`
+ 
+ if [ "$DIFF" ]; then
+ 
+    CHANGED=1
+-   DIFFSTR=`echo "$DIFF" | /usr/bin/awk '{print $1}' | \
+-           /usr/bin/paste -s -d " " -`
++   DIFFSTR=`echo "$DIFF" | awk '{print $1}' | \
++           paste -s -d " " -`
+ 
+ fi
+ 
+ if [ $INITIAL -eq 1 ]; then
+ 
+-   /bin/cat $SCANDIR/$IP > $SCANDIR/$IP.base
++   cat $SCANDIR/$IP > $SCANDIR/$IP.base
     echo "Initial scan"
 -   exit 0
 +   exit $STATE_OK
