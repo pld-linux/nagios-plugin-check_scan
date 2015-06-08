@@ -1,8 +1,8 @@
 %define		plugin	check_scan
 Summary:	A nmap scanner plugin for Nagios
 Name:		nagios-plugin-%{plugin}
-Version:	0.1
-Release:	0.1
+Version:	20051011
+Release:	1
 License:	GPL v2+
 Group:		Networking
 Source0:	http://www.altsec.info/check_scan.sh
